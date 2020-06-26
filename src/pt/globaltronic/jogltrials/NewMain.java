@@ -139,14 +139,14 @@ public class NewMain implements GLEventListener, KeyListener, MouseListener, Mou
             float pitch = camera.getPitch();
             float angleAroundPlayer = camera.getAngleAroundPlayer();
 
-            float pitchChange = (arg0.getY()) * 0.01f;
+            float pitchChange = (arg0.getY()) * 0.0001f;
             camera.setPitch(pitch + pitchChange);
 
 
 
 
 
-            float angleChange = (arg0.getX() - 1024 / 2) * 0.01f;
+            float angleChange = (arg0.getX() - 1024 / 2) * 0.1f;
             camera.setAngleAroundPlayer(angleAroundPlayer + angleChange);
 
 
