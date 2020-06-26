@@ -33,6 +33,8 @@ public class StaticShader {
     private int location_viewMatrix;
     private int location_lightPosition;
     private int location_lightColor;
+    private int location_shineDamper;
+    private int location_reflectivity;
 
 
 
@@ -64,6 +66,8 @@ public class StaticShader {
         location_viewMatrix = getUniformLocation("viewMatrix");
         location_lightPosition = getUniformLocation("lightPosition");
         location_lightColor = getUniformLocation("lightColor");
+        location_shineDamper = getUniformLocation("shineDamper");
+        location_reflectivity = getUniformLocation("reflectivity");
 
     }
 
@@ -122,6 +126,11 @@ public class StaticShader {
     public void loadLight(Light light){
         loadVector(location_lightPosition, light.getPosition());
         loadVector(location_lightColor, light.getColor());
+    }
+
+    public void loadShineVariable(float damper, float reflectivity){
+        loadFloat(location_shineDamper, damper);
+        loadFloat(location_reflectivity, reflectivity);
     }
 
 

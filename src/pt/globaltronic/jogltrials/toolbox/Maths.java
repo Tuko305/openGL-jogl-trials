@@ -28,7 +28,7 @@ public class Maths {
         matrix.loadIdentity();
         Vec3f cameraPos = camera.getPosition();
         matrix.rotate((float)Math.toRadians(camera.getPitch()), 1, 0, 0);
-        matrix.rotate((float)Math.toRadians(camera.getYaw()), 0, 1, 0);
+        matrix.rotate((float)Math.toRadians(camera.getYaw()), 0,1 , 0);
         matrix.rotate((float)Math.toRadians(camera.getRoll()), 0, 0, 1);
         matrix.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
         //applies the scale evenly to all 3 coordinates

@@ -6,6 +6,7 @@ import com.jogamp.opengl.math.Matrix4;
 import pt.globaltronic.jogltrials.entity.Entity;
 import pt.globaltronic.jogltrials.models.RawModel;
 import pt.globaltronic.jogltrials.models.TexturedModel;
+import pt.globaltronic.jogltrials.textures.ModelTexture;
 import pt.globaltronic.jogltrials.toolbox.Maths;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class RendererEntity {
     public RendererEntity(GL3 gl, StaticShader shader, float[] projectionMatrix){
         this.shader = shader;
         this.gl = gl;
-        //cull face will improve performance, cutting away triangles pointing away from the camera.
+
 
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
@@ -64,6 +65,8 @@ public class RendererEntity {
     private void prepareInstance (Entity entity){
         Matrix4 transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
         shader.loadTransformationMatrix(transformationMatrix);
+        ModelTexture texture = entity.getModel().getModelTexture();
+        shader.loadShineVariable(texture.getShineDamper(), texture.getReflectivity());
     }
 
 }
