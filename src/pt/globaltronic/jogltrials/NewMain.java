@@ -7,8 +7,10 @@ import com.jogamp.opengl.util.FPSAnimator;
 import com.sun.javafx.geom.Vec3f;
 import pt.globaltronic.jogltrials.entity.Camera;
 import pt.globaltronic.jogltrials.entity.Entity;
+import pt.globaltronic.jogltrials.entity.Light;
 import pt.globaltronic.jogltrials.models.RawModel;
 import pt.globaltronic.jogltrials.models.TexturedModel;
+import pt.globaltronic.jogltrials.terrain.Terrain;
 import pt.globaltronic.jogltrials.textures.ModelTexture;
 
 import javax.swing.*;
@@ -21,13 +23,16 @@ public class NewMain implements GLEventListener, KeyListener, MouseListener, Mou
     String FRAGMENT_SHADER_PATH = "shaders/fragmentShader.fp";
     boolean running = true;
 
-    MasterRenderer renderer = new MasterRenderer();
+    MasterRenderer renderer;
     Loader loader;
     RawModel model;
     Entity entity;
     ModelTexture texture;
     TexturedModel texturedModel;
     Camera camera;
+    Light sun;
+    Terrain terrain;
+    Terrain terrain2;
     boolean[] Keys = new boolean[4];
     boolean rightClickDown;
     Robot r;
@@ -35,12 +40,12 @@ public class NewMain implements GLEventListener, KeyListener, MouseListener, Mou
 
     @Override
     public void display(GLAutoDrawable glad) {
-        entity.increaseRotation(1, 1, 0);
+        entity.increaseRotation(0, 1, 0);
         moveCamera();
+        renderer.processTerrain(terrain);
+        renderer.processTerrain(terrain2);
         renderer.processEntity(entity);
         renderer.render(sun, camera);
-
-
     }
 
 
@@ -54,93 +59,21 @@ public class NewMain implements GLEventListener, KeyListener, MouseListener, Mou
     @Override
     public void init(GLAutoDrawable glad) {
 
+        renderer = new MasterRenderer(glad.getGL().getGL3());
         loader = new Loader(glad.getGL().getGL3());
 
-        float[] vertexData = {
-                -0.5f,0.5f,-0.5f,
-                -0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,-0.5f,
-                0.5f,0.5f,-0.5f,
-
-                -0.5f,0.5f,0.5f,
-                -0.5f,-0.5f,0.5f,
-                0.5f,-0.5f,0.5f,
-                0.5f,0.5f,0.5f,
-
-                0.5f,0.5f,-0.5f,
-                0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,0.5f,
-                0.5f,0.5f,0.5f,
-
-                -0.5f,0.5f,-0.5f,
-                -0.5f,-0.5f,-0.5f,
-                -0.5f,-0.5f,0.5f,
-                -0.5f,0.5f,0.5f,
-
-                -0.5f,0.5f,0.5f,
-                -0.5f,0.5f,-0.5f,
-                0.5f,0.5f,-0.5f,
-                0.5f,0.5f,0.5f,
-
-                -0.5f,-0.5f,0.5f,
-                -0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,0.5f
-
-        };
-
-        float[] textureCoords = {
-
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0
 
 
-        };
-
-        int[] indices = {
-                0,1,3,
-                3,1,2,
-                4,5,7,
-                7,5,6,
-                8,9,11,
-                11,9,10,
-                12,13,15,
-                15,13,14,
-                16,17,19,
-                19,17,18,
-                20,21,23,
-                23,21,22
-
-        };
-
-        model = loader.loadToVao(vertexData, textureCoords, indices);
+        model = OBJLoader.loadObjectModel("dragon", loader);
         //use the loader to get the id of the texture and pass it to the new texture
-        texture = new ModelTexture(loader.loadTexture("myTexture", shader));
+        StaticShader shader = renderer.getShader();
+        texture = new ModelTexture(loader.loadTexture("white"));
         texturedModel = new TexturedModel(model, texture);
-        entity = new Entity(texturedModel, new Vec3f(0, 0, -5), 0, 0, 0, 1.0f);
+        entity = new Entity(texturedModel, new Vec3f(0, 0, -25), 0, 0, 0, 1.0f);
         camera = new Camera();
+        sun = new Light(new Vec3f(3000,2000,2000), new Vec3f(1,1,1));
+        terrain = new Terrain(0,0, loader, new ModelTexture(loader.loadTexture("grass")));
+        terrain2 = new Terrain(0,1, loader, new ModelTexture(loader.loadTexture("grass")));
 
     }
 

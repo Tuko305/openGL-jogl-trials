@@ -1,6 +1,5 @@
 package pt.globaltronic.jogltrials;
 
-import com.jogamp.common.util.Bitstream;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLException;
@@ -36,7 +35,7 @@ public class Loader {
         return new RawModel(vaoID, indices.length); // triangles has triplets for position
     }
 
-    public int loadTexture(String fileName, MyShaderProgram shaderProgram){
+    public int loadTexture(String fileName){
         Texture texture = null;
         int textureId = 0;
 
@@ -59,6 +58,10 @@ public class Loader {
             System.exit(-1);
         }
         textures.add(textureId);
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR);
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MIN_FILTER, gl.GL_LINEAR);
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_S, gl.GL_REPEAT);
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_T, gl.GL_REPEAT);
         return textureId;
     }
 

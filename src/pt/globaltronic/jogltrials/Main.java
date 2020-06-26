@@ -2,19 +2,14 @@ package pt.globaltronic.jogltrials;
 
 
 import com.jogamp.opengl.*;
-import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.awt.GLJPanel;
-import com.jogamp.opengl.math.Matrix4;
-import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.sun.javafx.geom.Vec3f;
-import javafx.scene.chart.ScatterChart;
 import pt.globaltronic.jogltrials.entity.Camera;
 import pt.globaltronic.jogltrials.entity.Entity;
 import pt.globaltronic.jogltrials.models.RawModel;
 import pt.globaltronic.jogltrials.models.TexturedModel;
 import pt.globaltronic.jogltrials.textures.ModelTexture;
-import pt.globaltronic.jogltrials.toolbox.Maths;
 
 
 import javax.swing.JFrame;
@@ -25,10 +20,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 
     String VERTEX_SHADER_PATH = "shaders/vertexShader.vp";
     String FRAGMENT_SHADER_PATH = "shaders/fragmentShader.fp";
-    MyShaderProgram shader;
+    StaticShader shader;
     boolean running = true;
 
-    Renderer renderer;
+    RendererEntity rendererEntity;
     Loader loader;
     RawModel model;
     Entity entity;
@@ -44,10 +39,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
     public void display(GLAutoDrawable glad) {
         entity.increaseRotation(1, 1, 0);
         moveCamera();
-        renderer.prepare();
+        //rendererEntity.prepare();
         shader.start();
         shader.loadViewMatrix(camera);
-        renderer.render(entity, shader);
+        //renderer.render(entity, shader);
         shader.stop();
 
     }
@@ -62,8 +57,8 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 
     @Override
     public void init(GLAutoDrawable glad) {
-        shader = new MyShaderProgram(glad.getGL().getGL3(), VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH);
-        renderer = new Renderer(glad.getGL().getGL3(), shader);
+        shader = new StaticShader(glad.getGL().getGL3());
+        //rendererEntity = new RendererEntity(glad.getGL().getGL3(), shader);
         loader = new Loader(glad.getGL().getGL3());
 
         float[] vertexData = {
@@ -151,9 +146,9 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 
 
 
-        model = loader.loadToVao(vertexData, textureCoords, indices);
+        model = loader.loadToVao(vertexData, textureCoords, normals, indices);
         //use the loader to get the id of the texture and pass it to the new texture
-        texture = new ModelTexture(loader.loadTexture("myTexture", shader));
+        texture = new ModelTexture(loader.loadTexture("image"));
         texturedModel = new TexturedModel(model, texture);
         entity = new Entity(texturedModel, new Vec3f(0, 0, -5), 0, 0, 0, 1.0f);
         camera = new Camera();

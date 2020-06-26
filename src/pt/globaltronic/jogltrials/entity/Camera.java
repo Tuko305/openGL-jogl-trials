@@ -2,13 +2,10 @@ package pt.globaltronic.jogltrials.entity;
 
 import com.sun.javafx.geom.Vec3f;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
 public class Camera {
 
-    private Vec3f position = new Vec3f(0,0,0);
-    private float pitch;
+    private Vec3f position = new Vec3f(0,100,0);
+    private float pitch = 90;
     private float yaw;
     private float roll;
 
